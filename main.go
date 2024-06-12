@@ -26,7 +26,7 @@ func main() {
 	var outputDir string
 	var workingDir string
 
-	flag.StringVar(&outputDir, "output", "goretro/generated", "Directory to output generated client")
+	flag.StringVar(&outputDir, "output", "go-retro/generated", "Directory to output generated client")
 	flag.StringVar(&workingDir, "dir", ".", "Working directory to search for .go files")
 	flag.Parse()
 
