@@ -41,9 +41,9 @@ type Fact struct {
 }
 
 type CatFactsAPI struct {
-    Facts       func() ([]Fact, error)                   `method:"GET" path:"/facts"`
-    AnimalFacts func(animal_type string) ([]Fact, error) `method:"GET" path:"/facts" query:"animal_type"`
-    Fact        func(id string) (*Fact, error)           `method:"GET" path:"/facts/{id}"`
+    GetFacts        func() ([]Fact, error)                   `method:"GET" path:"/facts"`
+    AnimalFacts     func(animal_type string) ([]Fact, error) `method:"GET" path:"/facts" query:"animal_type"`
+    Fact            func(id string) (*Fact, error)           `method:"GET" path:"/facts/{id}"`
 }
 ```
 
@@ -76,24 +76,15 @@ import (
 )
 
 func main() {
-    client := goretro.NewCatsAPIClient("https://api.example.com")
+    client := goretro.NewCatsFactsAPIClient("https://api.example.com")
 
     // Example of calling a GET method
-    exchangeInfo, err := client.GetExchangeInfo(context.Background())
+    data, err := client.GetFacts(context.Background())
     if err != nil {
         fmt.Println("Error:", err)
         return
     }
-    fmt.Println("Exchange Info:", exchangeInfo)
-
-    // Example of calling a POST method
-    postInput := binance.PostInput{Data: "example data"}
-    postValue, err := client.PostExample(context.Background(), postInput)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return
-    }
-    fmt.Println("Post Value:", postValue)
+    fmt.Printf("Data: %+v\n", data)
 }
 ```
 
@@ -111,7 +102,7 @@ authentication type in your API interface definition using the *auth* tag.
 ```go
 // omitted code...
 type CatFactsAPI struct {
-	Facts       func() ([]Fact, error)                   `method:"GET" path:"/facts" auth:"Bearer`
+	GetFacts       func() ([]Fact, error)                   `method:"GET" path:"/facts" auth:"Bearer`
 	AnimalFacts func(animal_type string) ([]Fact, error) `method:"GET" path:"/facts" query:"animal_type" auth:"API`
 	Fact        func(id string) (*Fact, error)           `method:"GET" path:"/facts/{id}" auth:"Basic`
 }
