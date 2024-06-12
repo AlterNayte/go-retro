@@ -8,27 +8,26 @@ import (
 	"os"
 )
 
-func main() {
-	//var catsAPI = goretro.NewCatFactsAPIClient("https://cat-fact.herokuapp.com")
-	//data, derr := catsAPI.Facts()
-	//if derr != nil {
-	//	log.Fatalf("Error getting facts: %v", derr)
-	//}
-	//fmt.Printf("Facts: %v\n", data)
-	//
-	//var httpbinapi = goretro.NewHttpAPIClient("https://httpbin.org")
-	//bindata, derr := httpbinapi.PostExample(httpbin.PostInput{Boots: 2})
-	//if derr != nil {
-	//	log.Fatalf("Error posting example: %v", derr)
-	//}
-	//fmt.Printf("Post example: %v\n", bindata)
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
+func main() {
 	var outputDir string
 	var workingDir string
+	var versionFlag bool
 
 	flag.StringVar(&outputDir, "output", "go-retro/generated", "Directory to output generated client")
 	flag.StringVar(&workingDir, "dir", ".", "Working directory to search for .go files")
+	flag.BoolVar(&versionFlag, "v", false, "Prints the version of the program")
 	flag.Parse()
+
+	if versionFlag {
+		fmt.Println("GoRetro Version:", version)
+		os.Exit(0)
+	}
 
 	if _, err := os.Stat(workingDir); os.IsNotExist(err) {
 		log.Fatalf("Working directory does not exist: %s", workingDir)

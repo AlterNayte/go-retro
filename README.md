@@ -51,7 +51,7 @@ type CatFactsAPI struct {
 Run GoRetro to generate the client code. This can be done by running the goretro command in your terminal.
 
 ```sh
-goretro
+go-retro
 ```
 By default, GoRetro will look for any api definition files throughout your project and generate the client code in the 
 generated folder ('/go-retro/generated' by default). You can also specify the output directory using the -output flag.
