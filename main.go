@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"go-retro/generator"
+	"github.com/AlterNayte/go-retro/generator"
 	"log"
 	"os"
 )
