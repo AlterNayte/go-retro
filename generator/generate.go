@@ -227,7 +227,7 @@ func Generate(outputDir string, inputDir string) error {
 
 	if len(files) > 0 {
 		// Generate the base file
-		packageName := "your_package_name" // Replace with actual package name
+		packageName := "goretro" // Replace with actual package name
 		err := generateBaseFile(outputDir, packageName)
 		if err != nil {
 			return err
@@ -288,70 +288,39 @@ func Generate(outputDir string, inputDir string) error {
 								pathParams := ""
 
 								queryParams := []QueryParam{}
-								funcType := field.Type.(*ast.FuncType)
-								//if funcType.Params.NumFields() > 0 {
-								//	paramType := funcType.Params.List[0].Type
-								//	params = fmt.Sprintf("%s %s", funcType.Params.List[0].Names[0].Name, paramType)
-								//	if method == "POST" {
-								//		body = funcType.Params.List[0].Names[0].Name
-								//	}
-								//}
-								//returnType := ""
-								//var retType ast.Expr
-								//if funcType.Results.NumFields() > 0 {
-								//	//retType := funcType.Results.List[0].Type.(*ast.StarExpr).X.(*ast.Ident).Name
-								//	retType = funcType.Results.List[0].Type
-								//	var retTypeName string
-								//	if arrayType, ok := retType.(*ast.ArrayType); ok {
-								//		elemType := arrayType.Elt
-								//		if starExpr, ok := elemType.(*ast.StarExpr); ok {
-								//			retTypeName = fmt.Sprintf("[]*%s.%s", node.Name.Name, starExpr.X.(*ast.Ident).Name)
-								//		} else if ident, ok := elemType.(*ast.Ident); ok {
-								//			retTypeName = fmt.Sprintf("[]%s.%s", node.Name.Name, ident.Name)
-								//		}
-								//	} else if starExpr, ok := retType.(*ast.StarExpr); ok {
-								//		retTypeName = fmt.Sprintf("*%s.%s", node.Name.Name, starExpr.X.(*ast.Ident).Name)
-								//	} else if ident, ok := retType.(*ast.Ident); ok {
-								//		retTypeName = fmt.Sprintf("%s.%s", node.Name.Name, ident.Name)
-								//	}
-								//	//if starExpr, ok := retType.(*ast.StarExpr); ok {
-								//	//	retTypeName = fmt.Sprintf("*%s.%s", node.Name.Name, starExpr.X.(*ast.Ident).Name)
-								//	//} else if ident, ok := retType.(*ast.Ident); ok {
-								//	//	retTypeName = fmt.Sprintf("%s.%s", node.Name.Name, ident.Name)
-								//	//}
-								//	returnType = retTypeName
-								//	//returnType = fmt.Sprintf("%s.%s", node.Name.Name, retType)
+								if funcType, ok := field.Type.(*ast.FuncType); ok {
 
-								if funcType.Params.NumFields() > 0 {
-									paramType := funcType.Params.List[0].Type
-									params = fmt.Sprintf("%s %s", funcType.Params.List[0].Names[0].Name, formatType(paramType, node.Name.Name))
-									if method == "POST" {
-										includeBytes = true
-										body = funcType.Params.List[0].Names[0].Name
+									if funcType.Params.NumFields() > 0 {
+										paramType := funcType.Params.List[0].Type
+										params = fmt.Sprintf("%s %s", funcType.Params.List[0].Names[0].Name, formatType(paramType, node.Name.Name))
+										if method == "POST" {
+											includeBytes = true
+											body = funcType.Params.List[0].Names[0].Name
+										}
 									}
-								}
-								returnType := ""
-								if funcType.Results.NumFields() > 0 {
-									retType := funcType.Results.List[0].Type
-									if _, isIdent := retType.(*ast.Ident); isIdent {
-										returnType = formatType(retType, node.Name.Name)
-									} else {
-										returnType = fmt.Sprintf("%s", formatType(retType, node.Name.Name))
+									returnType := ""
+									if funcType.Results.NumFields() > 0 {
+										retType := funcType.Results.List[0].Type
+										if _, isIdent := retType.(*ast.Ident); isIdent {
+											returnType = formatType(retType, node.Name.Name)
+										} else {
+											returnType = fmt.Sprintf("%s", formatType(retType, node.Name.Name))
+										}
 									}
-								}
 
-								methods = append(methods, Method{
-									Name:        methodName,
-									Params:      params,
-									Returns:     fmt.Sprintf("%s, error", returnType),
-									Method:      method,
-									Path:        path,
-									PathParams:  pathParams,
-									Body:        body,
-									ReturnType:  returnType,
-									Auth:        auth,
-									QueryParams: queryParams,
-								})
+									methods = append(methods, Method{
+										Name:        methodName,
+										Params:      params,
+										Returns:     fmt.Sprintf("%s, error", returnType),
+										Method:      method,
+										Path:        path,
+										PathParams:  pathParams,
+										Body:        body,
+										ReturnType:  returnType,
+										Auth:        auth,
+										QueryParams: queryParams,
+									})
+								}
 							}
 							if len(methods) == 0 {
 								continue // Skip if there are no valid methods
@@ -395,23 +364,6 @@ func Generate(outputDir string, inputDir string) error {
 	return nil
 }
 
-// formatType formats the Go type with package name if necessary.
-//
-//	func formatType(expr ast.Expr, packageName string) string {
-//		switch t := expr.(type) {
-//		case *ast.StarExpr:
-//			return fmt.Sprintf("*%s.%s", packageName, formatType(t.X, packageName))
-//		case *ast.Ident:
-//			if isPrimitive(t.Name) {
-//				return t.Name
-//			}
-//			return fmt.Sprintf("%s.%s", packageName, t.Name)
-//		case *ast.ArrayType:
-//			return fmt.Sprintf("[]%s", formatType(t.Elt, packageName))
-//		default:
-//			return ""
-//		}
-//	}
 func formatType(expr ast.Expr, packageName string) string {
 	switch t := expr.(type) {
 	case *ast.StarExpr:

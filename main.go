@@ -20,7 +20,7 @@ func main() {
 	var versionFlag bool
 
 	flag.StringVar(&outputDir, "output", "go-retro/generated", "Directory to output generated client")
-	flag.StringVar(&workingDir, "dir", ".", "Working directory to search for .go files")
+	flag.StringVar(&workingDir, "dir", "", "Working directory to search for .go files")
 	flag.BoolVar(&versionFlag, "v", false, "Prints the version of the program")
 	flag.Parse()
 
@@ -29,6 +29,13 @@ func main() {
 		os.Exit(0)
 	}
 
+	if workingDir == "" {
+		var err error
+		workingDir, err = os.Getwd()
+		if err != nil {
+			log.Fatalf("Error getting current working directory: %v", err)
+		}
+	}
 	if _, err := os.Stat(workingDir); os.IsNotExist(err) {
 		log.Fatalf("Working directory does not exist: %s", workingDir)
 	}
