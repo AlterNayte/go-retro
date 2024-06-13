@@ -120,12 +120,12 @@ myproject/
 ├── api/
 │   └── api.go
 ├── generated/
-│   └── binance_client_gen.go
+│   └── api_client_gen.go
 ├── main.go
 └── go.mod
 ```
 
-In this example, api/api.go contains your API interface definitions, and running goretro generates the client code in generated/binance_client_gen.go.
+In this example, api/api.go contains your API interface definitions, and running goretro generates the client code in generated/api_client_gen.go.
 
 ## Common Code
 GoRetro generates a base file containing common code, such as authentication types and helper functions. Ensure this file is included in your project to avoid conflicts.
