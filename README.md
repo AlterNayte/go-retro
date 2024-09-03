@@ -79,7 +79,7 @@ func main() {
     client := goretro.NewCatsFactsAPIClient("https://api.example.com")
 
     // Example of calling a GET method
-    data, err := client.GetFacts(context.Background())
+    data, err := client.GetFacts()
     if err != nil {
         fmt.Println("Error:", err)
         return
@@ -102,9 +102,9 @@ authentication type in your API interface definition using the *auth* tag.
 ```go
 // omitted code...
 type CatFactsAPI struct {
-	GetFacts       func() ([]Fact, error)                   `method:"GET" path:"/facts" auth:"Bearer`
-	AnimalFacts func(animal_type string) ([]Fact, error) `method:"GET" path:"/facts" query:"animal_type" auth:"API`
-	Fact        func(id string) (*Fact, error)           `method:"GET" path:"/facts/{id}" auth:"Basic`
+	GetFacts        func() ([]Fact, error)                   `method:"GET" path:"/facts" auth:"Bearer`
+	AnimalFacts     func(animal_type string) ([]Fact, error) `method:"GET" path:"/facts" query:"animal_type" auth:"API`
+	Fact            func(id string) (*Fact, error)           `method:"GET" path:"/facts/{id}" auth:"Basic`
 }
 ```
 
@@ -133,13 +133,13 @@ GoRetro generates a base file containing common code, such as authentication typ
 ```go
 package goretro
 
-type AuthType int
+type AuthType string
 
 const (
-    AuthNone AuthType = iota
-    AuthBasic
-    AuthAPIKey
-    AuthBearer
+	AuthNone   AuthType = "none"
+	AuthBasic  AuthType = "basic"
+	AuthAPIKey AuthType = "api_key"
+	AuthBearer AuthType = "bearer"
 )
 
 // Other common code...
